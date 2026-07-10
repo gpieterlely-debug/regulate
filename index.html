@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Regulate">
+<meta name="theme-color" content="#12151f">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<title>Regulate</title>
+<style>
+  :root {
+    --bg: #12151f;
+    --surface: #1b2130;
+    --surface2: #242b40;
+    --line: #2e3650;
+    --text: #e9eaf2;
+    --muted: #8b91a7;
+    --accent: #8f9dff;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  #phone { width: 100%; max-width: 430px; min-height: 100vh; display: flex; flex-direction: column; }
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 10px;
+  }
+  header .brand { font-weight: 700; font-size: 20px; letter-spacing: -0.02em; }
+  header .right { display: flex; align-items: baseline; gap: 12px; }
+  header .count { color: var(--muted); font-size: 12px; }
+  header .gear {
+    background: none; border: none; color: var(--muted); cursor: pointer;
+    font-size: 17px; padding: 2px 4px; font-family: inherit;
+  }
+  main { flex: 1; padding: 8px 20px 20px; overflow-y: auto; }
+  nav {
+    display: flex; border-top: 1px solid var(--line); background: var(--surface);
+    padding-bottom: env(safe-area-inset-bottom, 6px);
+  }
+  nav button {
+    flex: 1; background: none; border: none; cursor: pointer;
+    color: var(--muted); padding: 10px 0 6px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-family: inherit;
+  }
+  nav button.active { color: var(--accent); }
+  nav button .icon { font-size: 18px; line-height: 1; }
+  nav button .lbl { font-size: 11px; font-weight: 500; }
+  nav button.active .lbl { font-weight: 700; }
+
+  .fadein { animation: fadein 0.22s ease-out; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .prompt { font-size: 21px; font-weight: 600; margin: 10px 0 18px; letter-spacing: -0.01em; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tile {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 18px 8px; border-radius: 18px; cursor: pointer;
+    color: var(--text); font-family: inherit; transition: transform 0.1s ease;
+  }
+  .tile:active { transform: scale(0.96); }
+  .tile .emoji { font-size: 34px; line-height: 1; }
+  .tile .name { font-size: 13px; font-weight: 600; }
+  .hint { color: var(--muted); font-size: 12px; text-align: center; margin-top: 18px; }
+
+  .back { background: none; border: none; color: var(--muted); font-size: 13.5px; cursor: pointer; padding: 4px 0; font-family: inherit; }
+  .em-head { display: flex; align-items: center; gap: 12px; margin: 10px 0 20px; }
+  .em-head .emoji { font-size: 40px; }
+  .em-head .name { font-size: 24px; font-weight: 600; }
+
+  .field-label {
+    font-size: 12.5px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+  }
+  .field-label .opt { font-weight: 400; text-transform: none; letter-spacing: 0; opacity: 0.7; }
+
+  .intensity { display: flex; gap: 8px; margin-bottom: 22px; }
+  .intensity button {
+    flex: 1; padding: 14px 0; border-radius: 14px;
+    border: 1.5px solid var(--line); background: var(--surface);
+    color: var(--muted); font-size: 17px; font-weight: 700; cursor: pointer; font-family: inherit;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .chips button {
+    padding: 9px 14px; border-radius: 999px;
+    border: 1.5px solid var(--line); background: var(--surface);
+    color: var(--text); font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  textarea {
+    width: 100%; background: var(--surface); border: 1.5px solid var(--line);
+    border-radius: 14px; color: var(--text); font-size: 14px;
+    padding: 12px 14px; font-family: inherit; resize: none; outline: none;
+  }
+  .big-btn {
+    display: block; width: 100%; padding: 16px 0; border-radius: 16px;
+    border: none; color: #12151f; font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: inherit; margin-top: 20px;
+  }
+  .ghost-btn {
+    display: block; width: 100%; padding: 13px 0; margin-top: 10px;
+    border-radius: 16px; border: none; background: none;
+    color: var(--muted); font-size: 14px; cursor: pointer; font-family: inherit;
+  }
+  .center { text-align: center; }
+  .check {
+    width: 68px; height: 68px; border-radius: 50%; margin: 28px auto 18px;
+    display: flex; align-items: center; justify-content: center; font-size: 30px;
+  }
+  .insight { font-size: 15.5px; line-height: 1.55; max-width: 300px; margin: 0 auto 26px; }
+  .offer-q { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+
+  .tool-title { font-size: 24px; font-weight: 700; margin: 6px 0 10px; letter-spacing: -0.01em; }
+  .tool-body { color: var(--muted); font-size: 14.5px; line-height: 1.6; max-width: 320px; margin: 0 auto; }
+  .timer { font-size: 56px; font-weight: 700; margin: 26px 0; }
+
+  .breath-wrap { height: 190px; display: flex; align-items: center; justify-content: center; margin: 18px 0; }
+  #breath-circle {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #9d6bff66, #9d6bff22);
+    border: 2px solid #9d6bff; transform: scale(1);
+  }
+  .breath-phase { font-size: 22px; font-weight: 600; color: #b79aff; margin-bottom: 22px; }
+
+  .rsd-card {
+    background: var(--surface); border: 1.5px solid #ff5d9e55; border-radius: 18px;
+    padding: 22px 18px; margin: 18px 0; text-align: left; font-size: 15.5px; line-height: 1.6;
+  }
+
+  .insight-card {
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px;
+    padding: 12px 14px; margin-bottom: 8px; font-size: 13.5px; line-height: 1.5;
+  }
+  .dim-toggle { display: flex; gap: 6px; margin-bottom: 14px; }
+  .dim-toggle button {
+    flex: 1; padding: 9px 0; border-radius: 999px; font-size: 12.5px;
+    cursor: pointer; border: 1.5px solid var(--line); background: transparent;
+    color: var(--muted); font-weight: 600; font-family: inherit;
+  }
+  .dim-toggle button.active { border-color: var(--accent); background: rgba(143,157,255,0.13); color: var(--accent); }
+
+  .chart { display: flex; align-items: flex-end; gap: 8px; height: 150px; margin-bottom: 6px; }
+  .chart .col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 4px; }
+  .chart .bar { width: 100%; max-width: 44px; background: var(--accent); border-radius: 6px 6px 0 0; min-height: 2px; }
+  .chart .val { font-size: 11px; color: var(--muted); }
+  .chart-labels { display: flex; gap: 8px; margin-bottom: 24px; }
+  .chart-labels span { flex: 1; text-align: center; font-size: 11px; color: var(--muted); }
+  .empty-note { color: var(--muted); font-size: 13px; text-align: center; margin: 30px 0; }
+
+  .entry {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface); border: 1.5px solid var(--line);
+    border-radius: 14px; padding: 10px 12px; margin-bottom: 8px;
+  }
+  .entry .emoji { font-size: 22px; }
+  .entry .body { flex: 1; min-width: 0; }
+  .entry .top { font-size: 13.5px; font-weight: 600; }
+  .entry .top .dots { color: var(--muted); font-weight: 400; }
+  .entry .sub { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .entry .del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 4px; font-family: inherit; }
+
+  .empty-state { text-align: center; padding-top: 60px; color: var(--muted); }
+  .empty-state .big { font-size: 40px; margin-bottom: 14px; }
+  .empty-state p { font-size: 14.5px; line-height: 1.6; }
+
+  /* settings */
+  .settings-section {
+    background: var(--surface); border: 1.5px solid var(--line);
+    border-radius: 18px; padding: 16px; margin-bottom: 14px;
+  }
+  .settings-section h3 {
+    margin: 0 0 4px; font-size: 15px; font-weight: 700;
+  }
+  .settings-section .desc { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 0 0 12px; }
+  .row-btn {
+    display: block; width: 100%; padding: 12px 0; border-radius: 12px;
+    border: 1.5px solid var(--line); background: var(--surface2);
+    color: var(--text); font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: inherit; margin-bottom: 8px;
+  }
+  .nudge-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .nudge-row label { font-size: 14px; flex: 1; }
+  input[type="time"] {
+    background: var(--surface2); border: 1.5px solid var(--line); border-radius: 10px;
+    color: var(--text); font-size: 14px; padding: 8px 10px; font-family: inherit;
+    color-scheme: dark;
+  }
+  .switch { position: relative; width: 46px; height: 26px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch .slider {
+    position: absolute; inset: 0; border-radius: 999px;
+    background: var(--surface2); border: 1.5px solid var(--line);
+    transition: background 0.15s; cursor: pointer;
+  }
+  .switch .slider::before {
+    content: ""; position: absolute; width: 18px; height: 18px; border-radius: 50%;
+    left: 3px; top: 2.5px; background: var(--muted); transition: transform 0.15s, background 0.15s;
+  }
+  .switch input:checked + .slider { background: rgba(143,157,255,0.3); border-color: var(--accent); }
+  .switch input:checked + .slider::before { transform: translateX(19px); background: var(--accent); }
+  .status-line { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .status-line.ok { color: #4fd08c; }
+  .fineprint { color: var(--muted); font-size: 11.5px; line-height: 1.55; text-align: center; margin-top: 18px; }
+
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    .fadein { animation: none; }
+    .tile, .tile:active { transition: none; transform: none; }
+    #breath-circle { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div id="phone">
+  <header>
+    <span class="brand">Regulate</span>
+    <span class="right">
+      <span class="count" id="entry-count"></span>
+      <button class="gear" onclick="app.goTab('settings')" aria-label="Settings">&#9881;&#65039;</button>
+    </span>
+  </header>
+  <main id="main"></main>
+  <nav>
+    <button id="tab-log" class="active" onclick="app.goTab('log')">
+      <span class="icon">＋</span><span class="lbl">Log</span>
+    </button>
+    <button id="tab-patterns" onclick="app.goTab('patterns')">
+      <span class="icon">◔</span><span class="lbl">Patterns</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   REGULATE v4 (PWA) — emotional regulation tracker for ADHD.
+   Offline-first. All data stays on this device.
+   ============================================================ */
+
+const APP_VERSION = "4.0";
+
+const EMOTIONS = [
+  { id: "anger",       label: "Anger",       emoji: "\u{1F620}", color: "#ff6250", tool: "tipp" },
+  { id: "frustration", label: "Frustration", emoji: "\u{1F624}", color: "#ff8f40", tool: "tipp" },
+  { id: "anxiety",     label: "Anxiety",     emoji: "\u{1F630}", color: "#f2a03d", tool: "breathe" },
+  { id: "overwhelm",   label: "Overwhelm",   emoji: "\u{1F30A}", color: "#9d6bff", tool: "breathe" },
+  { id: "rsd",         label: "RSD spike",   emoji: "\u{1F494}", color: "#ff5d9e", tool: "rsd" },
+  { id: "shutdown",    label: "Shutdown",    emoji: "\u{1FAE5}", color: "#7d8aa6", tool: "breathe" },
+  { id: "sad",         label: "Sad",         emoji: "\u{1F622}", color: "#57a0ff", tool: "breathe" },
+  { id: "wired",       label: "Wired",       emoji: "\u26A1",    color: "#47e0d2", tool: "breathe" },
+  { id: "calm",        label: "Calm",        emoji: "\u{1F60C}", color: "#4fd08c", tool: null },
+  { id: "happy",       label: "Happy",       emoji: "\u{1F60A}", color: "#ffd44f", tool: null },
+];
+const TRIGGERS = ["Work", "Relationship", "Task", "Unexpected change", "Criticism", "Sensory", "Other"];
+const KEY = "regulate-entries";
+const SETTINGS_KEY = "regulate-settings";
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/* ---------- storage ---------- */
+function loadEntries() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    const data = raw ? JSON.parse(raw) : [];
+    return Array.isArray(data) ? data : [];
+  } catch (e) { return []; }
+}
+function persist(entries) {
+  try { localStorage.setItem(KEY, JSON.stringify(entries)); } catch (e) { /* in-memory still works */ }
+}
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    const s = raw ? JSON.parse(raw) : {};
+    return { nudgeEnabled: !!s.nudgeEnabled, nudgeTime: s.nudgeTime || "20:00", nudgeLastFired: s.nudgeLastFired || "" };
+  } catch (e) { return { nudgeEnabled: false, nudgeTime: "20:00", nudgeLastFired: "" }; }
+}
+function persistSettings(s) {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch (e) {}
+}
+
+/* ---------- helpers ---------- */
+function emotionById(id) { return EMOTIONS.find(e => e.id === id) || EMOTIONS[0]; }
+function timeBucket(d) {
+  const h = d.getHours();
+  if (h < 6) return "Night";
+  if (h < 12) return "Morning";
+  if (h < 17) return "Afternoon";
+  if (h < 22) return "Evening";
+  return "Night";
+}
+function timeAgo(ts) {
+  const mins = Math.floor((Date.now() - ts) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return mins + "m ago";
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + "h ago";
+  const days = Math.floor(hrs / 24);
+  return days === 1 ? "yesterday" : days + "d ago";
+}
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function downloadFile(name, mime, content) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+/* ---------- insight after save (never judgmental) ---------- */
+function buildInsight(entry, priorEntries) {
+  const weekAgo = Date.now() - 7 * 86400000;
+  const same = priorEntries.filter(e => e.emotion === entry.emotion && e.timestamp >= weekAgo);
+  same.push(entry);
+  const em = emotionById(entry.emotion);
+  if (same.length >= 3) {
+    const buckets = {};
+    same.forEach(e => { const b = timeBucket(new Date(e.timestamp)); buckets[b] = (buckets[b] || 0) + 1; });
+    const top = Object.entries(buckets).sort((a, b) => b[1] - a[1])[0];
+    if (top[1] / same.length >= 0.6) {
+      return "Logged. That's " + same.length + " " + em.label.toLowerCase() + " entries this week — most land in the " + top[0].toLowerCase() + ".";
+    }
+    return "Logged. That's " + same.length + " " + em.label.toLowerCase() + " entries this week. Patterns are forming.";
+  }
+  if (same.length === 2) {
+    return "Logged. Second " + em.label.toLowerCase() + " entry this week — you're catching these in real time.";
+  }
+  const lines = [
+    "Logged. Naming it is the first regulation move.",
+    "Saved. Noticing counts — that's the pause your brain skips.",
+    "Got it. Externalized, so you don't have to hold it.",
+    "Logged. Quick catch.",
+  ];
+  return lines[priorEntries.length % lines.length];
+}
+
+/* ---------- dashboard insights (3 max) ---------- */
+function dashboardInsights(entries) {
+  const out = [];
+  if (entries.length < 3) return out;
+  const weekAgo = Date.now() - 7 * 86400000;
+  const recent = entries.filter(e => e.timestamp >= weekAgo);
+  const pool = recent.length >= 3 ? recent : entries;
+  const win = recent.length >= 3 ? "this week" : "so far";
+
+  const byEmotion = {};
+  pool.forEach(e => byEmotion[e.emotion] = (byEmotion[e.emotion] || 0) + 1);
+  const topE = Object.entries(byEmotion).sort((a, b) => b[1] - a[1])[0];
+  if (topE && topE[1] >= 2) out.push(emotionById(topE[0]).label + " shows up most " + win + " (" + topE[1] + " entries).");
+
+  const byBucket = {};
+  pool.forEach(e => { const b = timeBucket(new Date(e.timestamp)); byBucket[b] = (byBucket[b] || 0) + 1; });
+  const topB = Object.entries(byBucket).sort((a, b) => b[1] - a[1])[0];
+  if (topB && pool.length >= 4 && topB[1] / pool.length >= 0.4) {
+    out.push(topB[0] + "s carry the most entries — worth planning buffers there.");
+  }
+
+  const byTrigger = {};
+  pool.forEach(e => { if (e.trigger_tag) byTrigger[e.trigger_tag] = (byTrigger[e.trigger_tag] || 0) + 1; });
+  const topT = Object.entries(byTrigger).sort((a, b) => b[1] - a[1])[0];
+  if (topT && topT[1] >= 2) out.push('"' + topT[0] + '" is your most-tagged trigger ' + win + ".");
+
+  return out.slice(0, 3);
+}
+
+/* ============================================================ */
+
+const app = {
+  entries: loadEntries(),
+  settings: loadSettings(),
+  tab: "log",           // log | patterns | settings
+  screen: "grid",       // grid | detail | saved | tool
+  draft: null,
+  lastEntryId: null,
+  lastInsight: "",
+  activeTool: null,
+  patternDim: "time",
+  timers: [],
+  importStatus: "",
+
+  clearTimers() {
+    this.timers.forEach(t => clearTimeout(t));
+    this.timers = [];
+  },
+
+  goTab(tab) {
+    this.tab = tab;
+    this.screen = "grid";
+    this.draft = null;
+    this.activeTool = null;
+    this.importStatus = "";
+    this.render();
+  },
+
+  pick(emotionId) {
+    this.draft = { emotion: emotionId, intensity: 3, trigger_tag: null, note: "" };
+    this.screen = "detail";
+    this.render();
+  },
+
+  setIntensity(n) { this.draft.intensity = n; this.render(); },
+  toggleTrigger(t) {
+    this.draft.trigger_tag = this.draft.trigger_tag === t ? null : t;
+    this.render();
+  },
+
+  save() {
+    const noteEl = document.getElementById("note");
+    if (noteEl) this.draft.note = noteEl.value;
+    const entry = {
+      id: Date.now() + "-" + Math.random().toString(36).slice(2, 7),
+      timestamp: Date.now(),
+      emotion: this.draft.emotion,
+      intensity: this.draft.intensity,
+      trigger_tag: this.draft.trigger_tag,
+      note: (this.draft.note || "").trim() || null,
+      coping_tool_used: null,
+    };
+    this.lastInsight = buildInsight(entry, this.entries);
+    this.entries.unshift(entry);
+    persist(this.entries);
+    this.lastEntryId = entry.id;
+    this.draft = null;
+    this.screen = "saved";
+    this.render();
+  },
+
+  startTool(toolId) { this.activeTool = toolId; this.screen = "tool"; this.render(); },
+
+  finishTool() {
+    const e = this.entries.find(x => x.id === this.lastEntryId);
+    if (e) { e.coping_tool_used = this.activeTool; persist(this.entries); }
+    this.home();
+  },
+
+  home() {
+    this.clearTimers();
+    this.tab = "log";
+    this.screen = "grid";
+    this.draft = null;
+    this.activeTool = null;
+    this.render();
+  },
+
+  deleteEntry(id) {
+    this.entries = this.entries.filter(e => e.id !== id);
+    persist(this.entries);
+    this.render();
+  },
+
+  setDim(d) { this.patternDim = d; this.render(); },
+
+  /* ---------- data export / import ---------- */
+  exportJSON() {
+    downloadFile("regulate-export-" + todayStr() + ".json", "application/json",
+      JSON.stringify({ app: "Regulate", version: APP_VERSION, exported: new Date().toISOString(), entries: this.entries }, null, 2));
+  },
+
+  exportCSV() {
+    const header = "id,timestamp_iso,emotion,intensity,trigger,note,coping_tool_used";
+    const rows = this.entries.map(e => {
+      const cells = [
+        e.id,
+        new Date(e.timestamp).toISOString(),
+        e.emotion,
+        e.intensity,
+        e.trigger_tag || "",
+        e.note || "",
+        e.coping_tool_used || "",
+      ].map(c => {
+        const s = String(c);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      });
+      return cells.join(",");
+    });
+    downloadFile("regulate-export-" + todayStr() + ".csv", "text/csv", [header].concat(rows).join("\n"));
+  },
+
+  importJSON(fileInput) {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        const incoming = Array.isArray(data) ? data : (Array.isArray(data.entries) ? data.entries : null);
+        if (!incoming) throw new Error("no entries array");
+        const known = new Set(this.entries.map(e => e.id));
+        let added = 0;
+        incoming.forEach(e => {
+          if (e && e.id && e.emotion && e.timestamp && !known.has(e.id)) {
+            this.entries.push(e);
+            known.add(e.id);
+            added++;
+          }
+        });
+        this.entries.sort((a, b) => b.timestamp - a.timestamp);
+        persist(this.entries);
+        this.importStatus = added > 0 ? ("Imported " + added + " new entries.") : "No new entries — everything was already here.";
+      } catch (err) {
+        this.importStatus = "That file didn't parse. Use a Regulate JSON export.";
+      }
+      this.render();
+    };
+    reader.readAsText(file);
+  },
+
+  /* ---------- daily nudge ---------- */
+  async toggleNudge(checked) {
+    if (checked) {
+      if (typeof Notification === "undefined") {
+        this.settings.nudgeEnabled = true; // in-app banner still works
+      } else if (Notification.permission === "granted") {
+        this.settings.nudgeEnabled = true;
+      } else {
+        try {
+          const perm = await Notification.requestPermission();
+          this.settings.nudgeEnabled = true; // enabled either way; falls back to in-app
+          void perm;
+        } catch (e) { this.settings.nudgeEnabled = true; }
+      }
+    } else {
+      this.settings.nudgeEnabled = false;
+    }
+    persistSettings(this.settings);
+    this.render();
+  },
+
+  setNudgeTime(v) {
+    this.settings.nudgeTime = v || "20:00";
+    persistSettings(this.settings);
+  },
+
+  checkNudge() {
+    const s = this.settings;
+    if (!s.nudgeEnabled) return;
+    if (s.nudgeLastFired === todayStr()) return;
+    const now = new Date();
+    const [hh, mm] = s.nudgeTime.split(":").map(Number);
+    if (now.getHours() > hh || (now.getHours() === hh && now.getMinutes() >= mm)) {
+      s.nudgeLastFired = todayStr();
+      persistSettings(s);
+      const msg = "Quick check-in — how's it hitting today? One tap is enough.";
+      if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+        try { new Notification("Regulate", { body: msg, icon: "icon-192.png" }); return; } catch (e) {}
+      }
+      // in-app fallback: only if user is on the grid, keep it gentle
+      if (this.tab === "log" && this.screen === "grid") {
+        const main = document.getElementById("main");
+        if (main) {
+          const el = document.createElement("div");
+          el.className = "insight-card fadein";
+          el.style.borderColor = "rgba(143,157,255,0.5)";
+          el.textContent = msg;
+          main.insertBefore(el, main.firstChild);
+        }
+      }
+    }
+  },
+
+  nudgeStatusLine() {
+    if (!this.settings.nudgeEnabled) return "";
+    if (typeof Notification === "undefined") {
+      return '<p class="status-line">Notifications aren\u2019t available in this browser \u2014 you\u2019ll get an in-app note instead when the app is open.</p>';
+    }
+    if (Notification.permission === "granted") {
+      return '<p class="status-line ok">Notifications allowed \u2713</p>';
+    }
+    if (Notification.permission === "denied") {
+      return '<p class="status-line">Notifications are blocked in your browser settings \u2014 you\u2019ll get an in-app note instead.</p>';
+    }
+    return '<p class="status-line">Tap the toggle again if the permission prompt didn\u2019t appear.</p>';
+  },
+
+  /* ---------- rendering ---------- */
+  render() {
+    this.clearTimers();
+    document.getElementById("entry-count").textContent = this.entries.length + " logged";
+    document.getElementById("tab-log").className = this.tab === "log" ? "active" : "";
+    document.getElementById("tab-patterns").className = this.tab === "patterns" ? "active" : "";
+    const main = document.getElementById("main");
+
+    if (this.tab === "settings") { main.innerHTML = this.viewSettings(); return; }
+    if (this.tab === "patterns") { main.innerHTML = this.viewPatterns(); return; }
+    if (this.screen === "grid")   { main.innerHTML = this.viewGrid(); return; }
+    if (this.screen === "detail") { main.innerHTML = this.viewDetail(); return; }
+    if (this.screen === "saved")  { main.innerHTML = this.viewSaved(); return; }
+    if (this.screen === "tool")   { main.innerHTML = this.viewTool(); this.bootTool(); return; }
+  },
+
+  viewGrid() {
+    let tiles = EMOTIONS.map(em =>
+      '<button class="tile" style="background:' + em.color + '1f;border:1.5px solid ' + em.color + '55" onclick="app.pick(\'' + em.id + '\')">' +
+        '<span class="emoji">' + em.emoji + '</span>' +
+        '<span class="name" style="color:' + em.color + '">' + em.label + '</span>' +
+      '</button>'
+    ).join("");
+    return '<div class="fadein">' +
+      '<p class="prompt">How\u2019s it hitting right now?</p>' +
+      '<div class="grid">' + tiles + '</div>' +
+      '<p class="hint">Tap one. Everything after is optional.</p>' +
+    '</div>';
+  },
+
+  viewDetail() {
+    const d = this.draft, em = emotionById(d.emotion);
+    const intensity = [1, 2, 3, 4, 5].map(n => {
+      const on = d.intensity === n;
+      const style = on ? 'border:2px solid ' + em.color + ';background:' + em.color + '2e;color:' + em.color : '';
+      return '<button style="' + style + '" onclick="app.setIntensity(' + n + ')">' + n + '</button>';
+    }).join("");
+    const chips = TRIGGERS.map(t => {
+      const on = d.trigger_tag === t;
+      const style = on ? 'border-color:' + em.color + ';background:' + em.color + '2e;color:' + em.color : '';
+      return '<button style="' + style + '" onclick="app.toggleTrigger(\'' + t.replace(/'/g, "\\'") + '\')">' + t + '</button>';
+    }).join("");
+    return '<div class="fadein">' +
+      '<button class="back" onclick="app.home()">\u2190 back</button>' +
+      '<div class="em-head"><span class="emoji">' + em.emoji + '</span>' +
+        '<span class="name" style="color:' + em.color + '">' + em.label + '</span></div>' +
+      '<div class="field-label">How strong?</div>' +
+      '<div class="intensity">' + intensity + '</div>' +
+      '<div class="field-label">What set it off? <span class="opt">optional</span></div>' +
+      '<div class="chips">' + chips + '</div>' +
+      '<div class="field-label">Note <span class="opt">optional</span></div>' +
+      '<textarea id="note" rows="2" placeholder="Anything worth remembering\u2026">' + esc(d.note || "") + '</textarea>' +
+      '<button class="big-btn" style="background:' + em.color + '" onclick="app.save()">Save</button>' +
+    '</div>';
+  },
+
+  viewSaved() {
+    const entry = this.entries.find(e => e.id === this.lastEntryId);
+    if (!entry) return this.viewGrid();
+    const em = emotionById(entry.emotion);
+    const offer = entry.intensity >= 4 && em.tool;
+    const labels = { tipp: "Cool the surge (60s)", breathe: "Paced breathing (2 min)", rsd: "Reality-check the spike" };
+    let actions;
+    if (offer) {
+      actions =
+        '<p class="offer-q">That was a big one. Want a quick reset?</p>' +
+        '<button class="big-btn" style="background:' + em.color + '" onclick="app.startTool(\'' + em.tool + '\')">' + labels[em.tool] + '</button>' +
+        '<button class="ghost-btn" onclick="app.home()">Not now</button>';
+    } else {
+      actions = '<button class="big-btn" style="background:var(--accent)" onclick="app.home()">Done</button>';
+    }
+    return '<div class="fadein center">' +
+      '<div class="check" style="background:' + em.color + '26;border:2px solid ' + em.color + '">\u2713</div>' +
+      '<p class="insight">' + esc(this.lastInsight) + '</p>' +
+      actions +
+    '</div>';
+  },
+
+  viewTool() {
+    if (this.activeTool === "tipp") {
+      return '<div class="fadein center">' +
+        '<h2 class="tool-title">Cool the surge</h2>' +
+        '<p class="tool-body">Cold water on your face or wrists \u2014 or 60 seconds of hard movement. Drop the body temperature, drop the intensity.</p>' +
+        '<div class="timer" id="tipp-timer">60s</div>' +
+        '<button class="big-btn" id="tipp-start" style="background:#ff6250" onclick="app.tippStart()">Start 60 seconds</button>' +
+        '<button class="ghost-btn" id="tipp-done" onclick="app.finishTool()">Done</button>' +
+      '</div>';
+    }
+    if (this.activeTool === "breathe") {
+      return '<div class="fadein center">' +
+        '<h2 class="tool-title">Paced breathing</h2>' +
+        '<p class="tool-body">Follow the circle. In through the nose for 4, out slow for 6. Stay as long as you want.</p>' +
+        '<div class="breath-wrap"><div id="breath-circle"></div></div>' +
+        '<p class="breath-phase" id="breath-phase">Breathe in\u2026 4</p>' +
+        '<button class="big-btn" style="background:#9d6bff" onclick="app.finishTool()">Done</button>' +
+      '</div>';
+    }
+    if (this.activeTool === "rsd") {
+      return '<div class="fadein center">' +
+        '<h2 class="tool-title">Reality check</h2>' +
+        '<div class="rsd-card">' +
+          '<strong style="color:#ff5d9e">RSD is loud, not accurate.</strong><br><br>' +
+          'Opposite action: do the thing the feeling says to avoid \u2014 send the message, stay in the room, don\u2019t withdraw.<br><br>' +
+          'Wise mind: name <em>one fact</em> that contradicts the story in your head right now.' +
+        '</div>' +
+        '<button class="big-btn" style="background:#ff5d9e" onclick="app.finishTool()">Done</button>' +
+      '</div>';
+    }
+    return "";
+  },
+
+  bootTool() {
+    if (this.activeTool === "breathe") this.breathCycle("in");
+  },
+
+  breathCycle(phase) {
+    const circle = document.getElementById("breath-circle");
+    const label = document.getElementById("breath-phase");
+    if (!circle || !label) return;
+    const dur = phase === "in" ? 4000 : 6000;
+    circle.style.transition = "transform " + (dur / 1000) + "s ease-in-out";
+    circle.style.transform = phase === "in" ? "scale(1.55)" : "scale(1)";
+    label.textContent = phase === "in" ? "Breathe in\u2026 4" : "Out slow\u2026 6";
+    this.timers.push(setTimeout(() => this.breathCycle(phase === "in" ? "out" : "in"), dur));
+  },
+
+  tippStart() {
+    const startBtn = document.getElementById("tipp-start");
+    if (startBtn) startBtn.style.display = "none";
+    let left = 60;
+    const tick = () => {
+      const t = document.getElementById("tipp-timer");
+      const doneBtn = document.getElementById("tipp-done");
+      if (!t) return;
+      if (left <= 0) {
+        t.textContent = "Done \u2713";
+        t.style.color = "#4fd08c";
+        if (doneBtn) { doneBtn.className = "big-btn"; doneBtn.style.background = "#4fd08c"; doneBtn.style.color = "#12151f"; }
+        return;
+      }
+      t.textContent = left + "s";
+      left--;
+      this.timers.push(setTimeout(tick, 1000));
+    };
+    tick();
+  },
+
+  viewPatterns() {
+    if (this.entries.length === 0) {
+      return '<div class="fadein empty-state">' +
+        '<div class="big">\u25D4</div>' +
+        '<p>Nothing here yet \u2014 and that\u2019s fine.<br>Patterns show up after a few logs.</p>' +
+      '</div>';
+    }
+    const insights = dashboardInsights(this.entries)
+      .map(l => '<div class="insight-card">' + esc(l) + '</div>').join("");
+
+    let data = [];
+    if (this.patternDim === "time") {
+      const order = ["Morning", "Afternoon", "Evening", "Night"];
+      const counts = {};
+      this.entries.forEach(e => { const b = timeBucket(new Date(e.timestamp)); counts[b] = (counts[b] || 0) + 1; });
+      data = order.map(k => ({ name: k, count: counts[k] || 0 }));
+    } else if (this.patternDim === "day") {
+      const counts = {};
+      this.entries.forEach(e => { const d = DAY_NAMES[new Date(e.timestamp).getDay()]; counts[d] = (counts[d] || 0) + 1; });
+      data = DAY_NAMES.map(k => ({ name: k, count: counts[k] || 0 }));
+    } else {
+      const counts = {};
+      this.entries.forEach(e => { if (e.trigger_tag) counts[e.trigger_tag] = (counts[e.trigger_tag] || 0) + 1; });
+      data = Object.entries(counts).sort((a, b) => b[1] - a[1])
+        .map(([name, count]) => ({ name: name === "Unexpected change" ? "Change" : name, count }));
+    }
+
+    const hasData = data.some(d => d.count > 0);
+    const max = Math.max(1, ...data.map(d => d.count));
+    let chart;
+    if (hasData) {
+      const cols = data.map(d =>
+        '<div class="col">' +
+          (d.count > 0 ? '<span class="val">' + d.count + '</span>' : '') +
+          '<div class="bar" style="height:' + Math.round((d.count / max) * 100) + '%"></div>' +
+        '</div>'
+      ).join("");
+      const labels = data.map(d => '<span>' + esc(d.name) + '</span>').join("");
+      chart = '<div class="chart">' + cols + '</div><div class="chart-labels">' + labels + '</div>';
+    } else {
+      chart = '<p class="empty-note">No trigger tags yet \u2014 they\u2019re optional, so no pressure.</p>';
+    }
+
+    const dims = [["time", "Time of day"], ["day", "Day of week"], ["trigger", "Trigger"]].map(([k, label]) =>
+      '<button class="' + (this.patternDim === k ? "active" : "") + '" onclick="app.setDim(\'' + k + '\')">' + label + '</button>'
+    ).join("");
+
+    const recent = this.entries.slice(0, 6).map(e => {
+      const em = emotionById(e.emotion);
+      const dots = "\u25CF".repeat(e.intensity) + "\u25CB".repeat(5 - e.intensity);
+      const sub = [
+        timeAgo(e.timestamp),
+        e.trigger_tag || null,
+        e.coping_tool_used ? "used a reset" : null,
+        e.note || null,
+      ].filter(Boolean).join(" \u00B7 ");
+      return '<div class="entry">' +
+        '<span class="emoji">' + em.emoji + '</span>' +
+        '<div class="body">' +
+          '<div class="top" style="color:' + em.color + '">' + em.label + ' <span class="dots">\u00B7 ' + dots + '</span></div>' +
+          '<div class="sub">' + esc(sub) + '</div>' +
+        '</div>' +
+        '<button class="del" aria-label="Delete entry" onclick="app.deleteEntry(\'' + e.id + '\')">\u00D7</button>' +
+      '</div>';
+    }).join("");
+
+    return '<div class="fadein">' +
+      (insights ? '<div style="margin-bottom:20px">' + insights + '</div>' : '') +
+      '<div class="dim-toggle">' + dims + '</div>' +
+      chart +
+      '<div class="field-label" style="margin-bottom:10px">Recent</div>' +
+      recent +
+    '</div>';
+  },
+
+  viewSettings() {
+    const s = this.settings;
+    return '<div class="fadein">' +
+      '<button class="back" onclick="app.home()">\u2190 back</button>' +
+      '<p class="prompt">Settings</p>' +
+
+      '<div class="settings-section">' +
+        '<h3>Daily nudge</h3>' +
+        '<p class="desc">One gentle check-in per day, never more. Object permanence, outsourced.</p>' +
+        '<div class="nudge-row">' +
+          '<label for="nudge-toggle">Remind me daily</label>' +
+          '<span class="switch"><input type="checkbox" id="nudge-toggle" ' + (s.nudgeEnabled ? "checked" : "") + ' onchange="app.toggleNudge(this.checked)"><span class="slider" onclick="document.getElementById(\'nudge-toggle\').click()"></span></span>' +
+        '</div>' +
+        '<div class="nudge-row">' +
+          '<label for="nudge-time">Around what time?</label>' +
+          '<input type="time" id="nudge-time" value="' + esc(s.nudgeTime) + '" onchange="app.setNudgeTime(this.value)">' +
+        '</div>' +
+        this.nudgeStatusLine() +
+        '<p class="status-line" style="margin-top:8px">Honest limit: a web app can\u2019t wake your phone on its own. This fires when the app is open (or installed and recently used). For a guaranteed nudge, set a matching daily alarm named \u201CRegulate\u201D \u2014 the two together work.</p>' +
+      '</div>' +
+
+      '<div class="settings-section">' +
+        '<h3>Your data</h3>' +
+        '<p class="desc">' + this.entries.length + ' entries, stored only on this device. Export a backup any time \u2014 JSON restores into the app, CSV opens in Excel.</p>' +
+        '<button class="row-btn" onclick="app.exportJSON()">Export backup (JSON)</button>' +
+        '<button class="row-btn" onclick="app.exportCSV()">Export for spreadsheets (CSV)</button>' +
+        '<button class="row-btn" onclick="document.getElementById(\'import-file\').click()">Import a JSON backup</button>' +
+        '<input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="app.importJSON(this)">' +
+        (this.importStatus ? '<p class="status-line ok">' + esc(this.importStatus) + '</p>' : '') +
+      '</div>' +
+
+      '<p class="fineprint">Regulate v' + APP_VERSION + ' \u00B7 offline-first \u00B7 no accounts, no cloud, no tracking.<br>Data lives in this browser \u2014 clearing site data erases it, so export backups.</p>' +
+    '</div>';
+  },
+};
+
+app.render();
+
+/* daily nudge check: on load and once a minute */
+app.checkNudge();
+setInterval(() => app.checkNudge(), 60000);
+
+/* register service worker for offline use (skips gracefully on file://) */
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => { /* offline caching unavailable; app still works */ });
+  });
+}
+</script>
+</body>
+</html>

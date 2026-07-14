@@ -1,5 +1,5 @@
 /* Regulate service worker — cache-first app shell, works fully offline */
-const CACHE = "regulate-v1";
+const CACHE = "regulate-v2";
 const ASSETS = [
   "./",
   "./index.html",

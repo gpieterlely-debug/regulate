@@ -90,6 +90,30 @@
     border: 1.5px solid var(--line); background: var(--surface);
     color: var(--muted); font-size: 17px; font-weight: 700; cursor: pointer; font-family: inherit;
   }
+  .slider-wrap { margin-bottom: 26px; text-align: center; }
+  .slider-val { font-size: 42px; font-weight: 700; line-height: 1; margin-bottom: 14px; }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 10px; border-radius: 999px;
+    background: var(--surface2); border: 1.5px solid var(--line);
+    outline: none; margin: 0;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--c, var(--accent));
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1.5px var(--c, var(--accent));
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--c, var(--accent));
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1.5px var(--c, var(--accent));
+    cursor: pointer;
+  }
+  .slider-scale { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 10px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
   .chips button {
     padding: 9px 14px; border-radius: 999px;
@@ -247,7 +271,7 @@
    Offline-first. All data stays on this device.
    ============================================================ */
 
-const APP_VERSION = "4.0";
+const APP_VERSION = "4.1";
 
 const EMOTIONS = [
   { id: "anger",       label: "Anger",       emoji: "\u{1F620}", color: "#ff6250", tool: "tipp" },
@@ -418,6 +442,11 @@ const app = {
   },
 
   setIntensity(n) { this.draft.intensity = n; this.render(); },
+  slideIntensity(v) {
+    this.draft.intensity = Number(v);
+    const el = document.getElementById("slider-val");
+    if (el) el.textContent = v;
+  },
   toggleTrigger(t) {
     this.draft.trigger_tag = this.draft.trigger_tag === t ? null : t;
     this.render();
@@ -623,11 +652,13 @@ const app = {
 
   viewDetail() {
     const d = this.draft, em = emotionById(d.emotion);
-    const intensity = [1, 2, 3, 4, 5].map(n => {
-      const on = d.intensity === n;
-      const style = on ? 'border:2px solid ' + em.color + ';background:' + em.color + '2e;color:' + em.color : '';
-      return '<button style="' + style + '" onclick="app.setIntensity(' + n + ')">' + n + '</button>';
-    }).join("");
+    const intensity =
+      '<div class="slider-wrap">' +
+        '<div class="slider-val" id="slider-val" style="color:' + em.color + '">' + d.intensity + '</div>' +
+        '<input type="range" min="1" max="5" step="1" value="' + d.intensity + '" style="--c:' + em.color + '" ' +
+          'oninput="app.slideIntensity(this.value)" aria-label="Intensity from 1 to 5">' +
+        '<div class="slider-scale"><span>1 \u00B7 mild</span><span>3</span><span>5 \u00B7 max</span></div>' +
+      '</div>';
     const chips = TRIGGERS.map(t => {
       const on = d.trigger_tag === t;
       const style = on ? 'border-color:' + em.color + ';background:' + em.color + '2e;color:' + em.color : '';
@@ -638,7 +669,7 @@ const app = {
       '<div class="em-head"><span class="emoji">' + em.emoji + '</span>' +
         '<span class="name" style="color:' + em.color + '">' + em.label + '</span></div>' +
       '<div class="field-label">How strong?</div>' +
-      '<div class="intensity">' + intensity + '</div>' +
+      intensity +
       '<div class="field-label">What set it off? <span class="opt">optional</span></div>' +
       '<div class="chips">' + chips + '</div>' +
       '<div class="field-label">Note <span class="opt">optional</span></div>' +

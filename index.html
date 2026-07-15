@@ -72,6 +72,12 @@
   .tile .emoji { font-size: 34px; line-height: 1; }
   .tile .name { font-size: 13px; font-weight: 600; }
   .hint { color: var(--muted); font-size: 12px; text-align: center; margin-top: 18px; }
+  .toolkit-link {
+    display: block; width: 100%; margin-top: 14px; padding: 12px 0;
+    background: none; border: 1.5px dashed var(--line); border-radius: 14px;
+    color: var(--muted); font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  .toolkit-link:active { color: var(--accent); border-color: var(--accent); }
 
   .back { background: none; border: none; color: var(--muted); font-size: 13.5px; cursor: pointer; padding: 4px 0; font-family: inherit; }
   .em-head { display: flex; align-items: center; gap: 12px; margin: 10px 0 20px; }
@@ -84,12 +90,6 @@
   }
   .field-label .opt { font-weight: 400; text-transform: none; letter-spacing: 0; opacity: 0.7; }
 
-  .intensity { display: flex; gap: 8px; margin-bottom: 22px; }
-  .intensity button {
-    flex: 1; padding: 14px 0; border-radius: 14px;
-    border: 1.5px solid var(--line); background: var(--surface);
-    color: var(--muted); font-size: 17px; font-weight: 700; cursor: pointer; font-family: inherit;
-  }
   .slider-wrap { margin-bottom: 26px; text-align: center; }
   .slider-val { font-size: 42px; font-weight: 700; line-height: 1; margin-bottom: 14px; }
   input[type="range"] {
@@ -114,6 +114,7 @@
     cursor: pointer;
   }
   .slider-scale { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 10px; }
+
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
   .chips button {
     padding: 9px 14px; border-radius: 999px;
@@ -147,18 +148,66 @@
   .tool-body { color: var(--muted); font-size: 14.5px; line-height: 1.6; max-width: 320px; margin: 0 auto; }
   .timer { font-size: 56px; font-weight: 700; margin: 26px 0; }
 
+  .tool-card {
+    display: flex; align-items: center; gap: 14px; width: 100%;
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 18px;
+    padding: 16px; margin-bottom: 10px; cursor: pointer; font-family: inherit;
+    color: var(--text); text-align: left;
+  }
+  .tool-card .emoji { font-size: 28px; }
+  .tool-card .t { font-size: 15px; font-weight: 700; }
+  .tool-card .s { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
   .breath-wrap { height: 190px; display: flex; align-items: center; justify-content: center; margin: 18px 0; }
+  .breath-wrap.small { height: 130px; margin: 10px 0; }
   #breath-circle {
     width: 100px; height: 100px; border-radius: 50%;
     background: radial-gradient(circle at 35% 35%, #9d6bff66, #9d6bff22);
     border: 2px solid #9d6bff; transform: scale(1);
   }
+  .breath-wrap.small #breath-circle { width: 70px; height: 70px; }
   .breath-phase { font-size: 22px; font-weight: 600; color: #b79aff; margin-bottom: 22px; }
 
   .rsd-card {
     background: var(--surface); border: 1.5px solid #ff5d9e55; border-radius: 18px;
     padding: 22px 18px; margin: 18px 0; text-align: left; font-size: 15.5px; line-height: 1.6;
   }
+
+  /* STOPP */
+  .stopp-dots { display: flex; justify-content: center; gap: 7px; margin: 6px 0 16px; }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--surface2); border: 1.5px solid var(--line); }
+  .sdot.done { background: var(--accent); border-color: var(--accent); }
+  .stopp-letter { font-size: 46px; font-weight: 800; letter-spacing: -0.02em; color: var(--accent); margin: 4px 0 2px; }
+  .stopp-card {
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 18px;
+    padding: 18px; margin: 16px 0; text-align: left; font-size: 14.5px; line-height: 1.65;
+    color: var(--text);
+  }
+  .stopp-card ul { margin: 0; padding-left: 18px; }
+  .stopp-card li { margin-bottom: 8px; color: var(--muted); }
+  .stopp-card li:last-child { margin-bottom: 0; }
+  .credit { color: var(--muted); font-size: 10.5px; text-align: center; margin-top: 16px; line-height: 1.5; }
+
+  /* practice */
+  .slot-card {
+    display: flex; align-items: center; gap: 14px; width: 100%;
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 18px;
+    padding: 16px; margin-bottom: 10px; cursor: pointer; font-family: inherit;
+    color: var(--text); text-align: left;
+  }
+  .slot-card.done { border-color: rgba(79,208,140,0.5); }
+  .slot-card .emoji { font-size: 28px; }
+  .slot-card .t { font-size: 15px; font-weight: 700; }
+  .slot-card .s { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .week-strip {
+    display: flex; justify-content: space-between; gap: 6px;
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 18px;
+    padding: 14px 16px; margin-top: 14px;
+  }
+  .week-day { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+  .week-day .lbl { font-size: 10.5px; color: var(--muted); }
+  .pdot { width: 9px; height: 9px; border-radius: 50%; background: transparent; border: 1.5px solid var(--line); }
+  .pdot.on { background: var(--accent); border-color: var(--accent); }
 
   .insight-card {
     background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px;
@@ -201,9 +250,7 @@
     background: var(--surface); border: 1.5px solid var(--line);
     border-radius: 18px; padding: 16px; margin-bottom: 14px;
   }
-  .settings-section h3 {
-    margin: 0 0 4px; font-size: 15px; font-weight: 700;
-  }
+  .settings-section h3 { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
   .settings-section .desc { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 0 0 12px; }
   .row-btn {
     display: block; width: 100%; padding: 12px 0; border-radius: 12px;
@@ -257,6 +304,9 @@
     <button id="tab-log" class="active" onclick="app.goTab('log')">
       <span class="icon">＋</span><span class="lbl">Log</span>
     </button>
+    <button id="tab-practice" onclick="app.goTab('practice')">
+      <span class="icon">☀</span><span class="lbl">Practice</span>
+    </button>
     <button id="tab-patterns" onclick="app.goTab('patterns')">
       <span class="icon">◔</span><span class="lbl">Patterns</span>
     </button>
@@ -267,11 +317,14 @@
 "use strict";
 
 /* ============================================================
-   REGULATE v4 (PWA) — emotional regulation tracker for ADHD.
+   REGULATE v4.4 (PWA) — emotional regulation tracker for ADHD.
    Offline-first. All data stays on this device.
+   v4.4: Practice tab (2x daily check-ins, 7-day dot history)
+   + interactive STOPP walkthrough after the full chain of
+   emotion -> intensity -> completed coping tool.
    ============================================================ */
 
-const APP_VERSION = "4.1";
+const APP_VERSION = "4.4";
 
 const EMOTIONS = [
   { id: "anger",       label: "Anger",       emoji: "\u{1F620}", color: "#ff6250", tool: "tipp" },
@@ -282,13 +335,46 @@ const EMOTIONS = [
   { id: "shutdown",    label: "Shutdown",    emoji: "\u{1FAE5}", color: "#7d8aa6", tool: "breathe" },
   { id: "sad",         label: "Sad",         emoji: "\u{1F622}", color: "#57a0ff", tool: "breathe" },
   { id: "wired",       label: "Wired",       emoji: "\u26A1",    color: "#47e0d2", tool: "breathe" },
-  { id: "calm",        label: "Calm",        emoji: "\u{1F60C}", color: "#4fd08c", tool: null },
-  { id: "happy",       label: "Happy",       emoji: "\u{1F60A}", color: "#ffd44f", tool: null },
+  { id: "calm",        label: "Calm",        emoji: "\u{1F60C}", color: "#4fd08c", tool: "breathe" },
+  { id: "happy",       label: "Happy",       emoji: "\u{1F60A}", color: "#ffd44f", tool: "breathe" },
 ];
 const TRIGGERS = ["Work", "Relationship", "Task", "Unexpected change", "Criticism", "Sensory", "Other"];
 const KEY = "regulate-entries";
 const SETTINGS_KEY = "regulate-settings";
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const OFFER_THRESHOLD = 3; // coping reset offered at this intensity and above
+
+/* STOPP steps — adapted from Carol Vivyan (getselfhelp.co.uk), after Ciarrochi & Bailey */
+const STOPP_STEPS = [
+  {
+    letter: "S", title: "Stop",
+    body: "Don't act yet. Step back from the situation in your mind.",
+    prompts: null, field: null, cta: "I've stopped \u2192",
+  },
+  {
+    letter: "T", title: "Take a breath",
+    body: "One or two slow breaths. Follow the circle.",
+    prompts: null, field: null, cta: "Next \u2192", breathe: true,
+  },
+  {
+    letter: "O", title: "Observe",
+    body: "Just notice \u2014 no fixing yet.",
+    prompts: ["What's actually happening?", "What am I reacting to?", "What's my body doing right now?"],
+    field: "observe", cta: "Next \u2192",
+  },
+  {
+    letter: "P", title: "Pull back",
+    body: "Get some distance on it.",
+    prompts: ["Is this a fact, or an opinion?", "What would I tell a friend in this exact spot?", "Will this matter in 6 months?"],
+    field: "pullback", cta: "Next \u2192",
+  },
+  {
+    letter: "P", title: "Practise what works",
+    body: "Pick the next move on purpose.",
+    prompts: ["What's the most helpful thing to do \u2014 for me, for them, for the situation?", "Does it fit my values?"],
+    field: "practise", cta: "Finish \u2713",
+  },
+];
 
 /* ---------- storage ---------- */
 function loadEntries() {
@@ -334,10 +420,10 @@ function timeAgo(ts) {
 function esc(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
-function todayStr() {
-  const d = new Date();
+function dateStr(d) {
   return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
 }
+function todayStr() { return dateStr(new Date()); }
 function downloadFile(name, mime, content) {
   const blob = new Blob([content], { type: mime });
   const url = URL.createObjectURL(blob);
@@ -352,6 +438,11 @@ function downloadFile(name, mime, content) {
 
 /* ---------- insight after save (never judgmental) ---------- */
 function buildInsight(entry, priorEntries) {
+  if (entry.practice) {
+    return entry.practice === "am"
+      ? "Morning check-in logged. Baseline captured."
+      : "Evening check-in logged. That's the day mapped.";
+  }
   const weekAgo = Date.now() - 7 * 86400000;
   const same = priorEntries.filter(e => e.emotion === entry.emotion && e.timestamp >= weekAgo);
   same.push(entry);
@@ -411,12 +502,16 @@ function dashboardInsights(entries) {
 const app = {
   entries: loadEntries(),
   settings: loadSettings(),
-  tab: "log",           // log | patterns | settings
-  screen: "grid",       // grid | detail | saved | tool
+  tab: "log",           // log | practice | patterns | settings
+  screen: "grid",       // grid | detail | saved | tool | toolkit | stopp
   draft: null,
   lastEntryId: null,
   lastInsight: "",
   activeTool: null,
+  standaloneTool: false, // true when toolkit opened without a fresh log
+  practiceSlot: null,    // "am" | "pm" while logging a practice check-in
+  stoppStep: 0,
+  stoppAnswers: {},
   patternDim: "time",
   timers: [],
   importStatus: "",
@@ -431,22 +526,32 @@ const app = {
     this.screen = "grid";
     this.draft = null;
     this.activeTool = null;
+    this.standaloneTool = false;
+    this.practiceSlot = null;
     this.importStatus = "";
     this.render();
   },
 
   pick(emotionId) {
     this.draft = { emotion: emotionId, intensity: 3, trigger_tag: null, note: "" };
+    this.tab = "log";
     this.screen = "detail";
     this.render();
   },
 
-  setIntensity(n) { this.draft.intensity = n; this.render(); },
+  pickPractice(slot) {
+    this.practiceSlot = slot;
+    this.tab = "log";
+    this.screen = "grid";
+    this.render();
+  },
+
   slideIntensity(v) {
     this.draft.intensity = Number(v);
     const el = document.getElementById("slider-val");
     if (el) el.textContent = v;
   },
+
   toggleTrigger(t) {
     this.draft.trigger_tag = this.draft.trigger_tag === t ? null : t;
     this.render();
@@ -463,21 +568,89 @@ const app = {
       trigger_tag: this.draft.trigger_tag,
       note: (this.draft.note || "").trim() || null,
       coping_tool_used: null,
+      practice: this.practiceSlot || null,
+      stopp: null,
     };
     this.lastInsight = buildInsight(entry, this.entries);
     this.entries.unshift(entry);
     persist(this.entries);
     this.lastEntryId = entry.id;
     this.draft = null;
+    this.practiceSlot = null;
     this.screen = "saved";
     this.render();
   },
 
-  startTool(toolId) { this.activeTool = toolId; this.screen = "tool"; this.render(); },
+  startTool(toolId) {
+    this.activeTool = toolId;
+    this.standaloneTool = false;
+    this.screen = "tool";
+    this.render();
+  },
+
+  openToolkit() {
+    this.standaloneTool = true;
+    this.screen = "toolkit";
+    this.render();
+  },
+
+  startStandaloneTool(toolId) {
+    this.activeTool = toolId;
+    this.standaloneTool = true;
+    this.screen = "tool";
+    this.render();
+  },
 
   finishTool() {
+    if (!this.standaloneTool) {
+      const e = this.entries.find(x => x.id === this.lastEntryId);
+      if (e) { e.coping_tool_used = this.activeTool; persist(this.entries); }
+      /* full chain complete (emotion -> intensity -> coping tool):
+         launch the STOPP walkthrough. Skippable at every step. */
+      this.stoppStep = 0;
+      this.stoppAnswers = {};
+      this.screen = "stopp";
+      this.render();
+      return;
+    }
+    this.home();
+  },
+
+  /* ---------- STOPP flow ---------- */
+  stoppCapture() {
+    const step = STOPP_STEPS[this.stoppStep];
+    if (step && step.field) {
+      const el = document.getElementById("stopp-input");
+      if (el && el.value.trim()) this.stoppAnswers[step.field] = el.value.trim();
+    }
+  },
+
+  stoppNext() {
+    this.stoppCapture();
+    if (this.stoppStep >= STOPP_STEPS.length - 1) { this.stoppFinish(); return; }
+    this.stoppStep++;
+    this.render();
+  },
+
+  stoppFinish() {
     const e = this.entries.find(x => x.id === this.lastEntryId);
-    if (e) { e.coping_tool_used = this.activeTool; persist(this.entries); }
+    if (e && Object.keys(this.stoppAnswers).length > 0) {
+      e.stopp = this.stoppAnswers;
+      persist(this.entries);
+    } else if (e) {
+      e.stopp = { completed: true };
+      persist(this.entries);
+    }
+    this.home();
+  },
+
+  stoppSkip() {
+    this.stoppCapture();
+    const e = this.entries.find(x => x.id === this.lastEntryId);
+    if (e && Object.keys(this.stoppAnswers).length > 0) {
+      e.stopp = this.stoppAnswers;
+      persist(this.entries);
+    }
     this.home();
   },
 
@@ -487,6 +660,8 @@ const app = {
     this.screen = "grid";
     this.draft = null;
     this.activeTool = null;
+    this.standaloneTool = false;
+    this.practiceSlot = null;
     this.render();
   },
 
@@ -505,8 +680,9 @@ const app = {
   },
 
   exportCSV() {
-    const header = "id,timestamp_iso,emotion,intensity,trigger,note,coping_tool_used";
+    const header = "id,timestamp_iso,emotion,intensity,trigger,note,coping_tool_used,practice,stopp_observe,stopp_pullback,stopp_practise";
     const rows = this.entries.map(e => {
+      const st = e.stopp || {};
       const cells = [
         e.id,
         new Date(e.timestamp).toISOString(),
@@ -515,6 +691,10 @@ const app = {
         e.trigger_tag || "",
         e.note || "",
         e.coping_tool_used || "",
+        e.practice || "",
+        st.observe || "",
+        st.pullback || "",
+        st.practise || "",
       ].map(c => {
         const s = String(c);
         return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
@@ -557,13 +737,13 @@ const app = {
   async toggleNudge(checked) {
     if (checked) {
       if (typeof Notification === "undefined") {
-        this.settings.nudgeEnabled = true; // in-app banner still works
+        this.settings.nudgeEnabled = true;
       } else if (Notification.permission === "granted") {
         this.settings.nudgeEnabled = true;
       } else {
         try {
           const perm = await Notification.requestPermission();
-          this.settings.nudgeEnabled = true; // enabled either way; falls back to in-app
+          this.settings.nudgeEnabled = true;
           void perm;
         } catch (e) { this.settings.nudgeEnabled = true; }
       }
@@ -592,7 +772,6 @@ const app = {
       if (typeof Notification !== "undefined" && Notification.permission === "granted") {
         try { new Notification("Regulate", { body: msg, icon: "icon-192.png" }); return; } catch (e) {}
       }
-      // in-app fallback: only if user is on the grid, keep it gentle
       if (this.tab === "log" && this.screen === "grid") {
         const main = document.getElementById("main");
         if (main) {
@@ -625,18 +804,28 @@ const app = {
     this.clearTimers();
     document.getElementById("entry-count").textContent = this.entries.length + " logged";
     document.getElementById("tab-log").className = this.tab === "log" ? "active" : "";
+    document.getElementById("tab-practice").className = this.tab === "practice" ? "active" : "";
     document.getElementById("tab-patterns").className = this.tab === "patterns" ? "active" : "";
     const main = document.getElementById("main");
 
     if (this.tab === "settings") { main.innerHTML = this.viewSettings(); return; }
+    if (this.tab === "practice") { main.innerHTML = this.viewPractice(); return; }
     if (this.tab === "patterns") { main.innerHTML = this.viewPatterns(); return; }
-    if (this.screen === "grid")   { main.innerHTML = this.viewGrid(); return; }
-    if (this.screen === "detail") { main.innerHTML = this.viewDetail(); return; }
-    if (this.screen === "saved")  { main.innerHTML = this.viewSaved(); return; }
-    if (this.screen === "tool")   { main.innerHTML = this.viewTool(); this.bootTool(); return; }
+    if (this.screen === "grid")    { main.innerHTML = this.viewGrid(); return; }
+    if (this.screen === "detail")  { main.innerHTML = this.viewDetail(); return; }
+    if (this.screen === "saved")   { main.innerHTML = this.viewSaved(); return; }
+    if (this.screen === "toolkit") { main.innerHTML = this.viewToolkit(); return; }
+    if (this.screen === "stopp")   { main.innerHTML = this.viewStopp(); this.bootStopp(); return; }
+    if (this.screen === "tool")    { main.innerHTML = this.viewTool(); this.bootTool(); return; }
   },
 
   viewGrid() {
+    const practiceBanner = this.practiceSlot
+      ? '<div class="insight-card" style="border-color:rgba(143,157,255,0.5)">' +
+          (this.practiceSlot === "am" ? "\u2600\uFE0F Morning" : "\u{1F319} Evening") +
+          ' practice check-in \u2014 how are you right now, spike or not?' +
+        '</div>'
+      : "";
     let tiles = EMOTIONS.map(em =>
       '<button class="tile" style="background:' + em.color + '1f;border:1.5px solid ' + em.color + '55" onclick="app.pick(\'' + em.id + '\')">' +
         '<span class="emoji">' + em.emoji + '</span>' +
@@ -644,9 +833,11 @@ const app = {
       '</button>'
     ).join("");
     return '<div class="fadein">' +
+      practiceBanner +
       '<p class="prompt">How\u2019s it hitting right now?</p>' +
       '<div class="grid">' + tiles + '</div>' +
       '<p class="hint">Tap one. Everything after is optional.</p>' +
+      '<button class="toolkit-link" onclick="app.openToolkit()">Spiking right now? Open the toolkit \u2192</button>' +
     '</div>';
   },
 
@@ -682,14 +873,17 @@ const app = {
     const entry = this.entries.find(e => e.id === this.lastEntryId);
     if (!entry) return this.viewGrid();
     const em = emotionById(entry.emotion);
-    const offer = entry.intensity >= 4 && em.tool;
     const labels = { tipp: "Cool the surge (60s)", breathe: "Paced breathing (2 min)", rsd: "Reality-check the spike" };
     let actions;
-    if (offer) {
+    if (entry.intensity >= OFFER_THRESHOLD && em.tool) {
       actions =
-        '<p class="offer-q">That was a big one. Want a quick reset?</p>' +
+        '<p class="offer-q">Want a quick reset?</p>' +
         '<button class="big-btn" style="background:' + em.color + '" onclick="app.startTool(\'' + em.tool + '\')">' + labels[em.tool] + '</button>' +
         '<button class="ghost-btn" onclick="app.home()">Not now</button>';
+    } else if (em.tool) {
+      actions =
+        '<button class="big-btn" style="background:var(--accent)" onclick="app.home()">Done</button>' +
+        '<button class="ghost-btn" onclick="app.startTool(\'' + em.tool + '\')">' + labels[em.tool] + ' \u2192</button>';
     } else {
       actions = '<button class="big-btn" style="background:var(--accent)" onclick="app.home()">Done</button>';
     }
@@ -698,6 +892,63 @@ const app = {
       '<p class="insight">' + esc(this.lastInsight) + '</p>' +
       actions +
     '</div>';
+  },
+
+  viewToolkit() {
+    return '<div class="fadein">' +
+      '<button class="back" onclick="app.home()">\u2190 back</button>' +
+      '<p class="prompt">Pick a reset</p>' +
+      '<button class="tool-card" onclick="app.startStandaloneTool(\'tipp\')">' +
+        '<span class="emoji">\u{1F9CA}</span><span><span class="t">Cool the surge</span><br><span class="s">Anger, frustration \u00B7 cold + movement \u00B7 60s</span></span>' +
+      '</button>' +
+      '<button class="tool-card" onclick="app.startStandaloneTool(\'breathe\')">' +
+        '<span class="emoji">\u{1F32C}\uFE0F</span><span><span class="t">Paced breathing</span><br><span class="s">Anxiety, overwhelm \u00B7 in 4, out 6 \u00B7 2 min</span></span>' +
+      '</button>' +
+      '<button class="tool-card" onclick="app.startStandaloneTool(\'rsd\')">' +
+        '<span class="emoji">\u{1F494}</span><span><span class="t">Reality check</span><br><span class="s">RSD spike \u00B7 signal vs story \u00B7 30s read</span></span>' +
+      '</button>' +
+      '<p class="hint">No log needed. Reset first, log later \u2014 or never. Both fine.</p>' +
+    '</div>';
+  },
+
+  /* ---------- STOPP view ---------- */
+  viewStopp() {
+    const step = STOPP_STEPS[this.stoppStep];
+    const dots = STOPP_STEPS.map((_, i) =>
+      '<span class="sdot' + (i <= this.stoppStep ? ' done' : '') + '"></span>'
+    ).join("");
+    let middle = "";
+    if (step.breathe) {
+      middle =
+        '<div class="breath-wrap small"><div id="breath-circle"></div></div>' +
+        '<p class="breath-phase" id="breath-phase" style="font-size:17px">Breathe in\u2026 4</p>';
+    } else if (step.prompts) {
+      const existing = step.field && this.stoppAnswers[step.field] ? this.stoppAnswers[step.field] : "";
+      middle =
+        '<div class="stopp-card"><ul>' +
+          step.prompts.map(p => '<li>' + p + '</li>').join("") +
+        '</ul></div>' +
+        '<textarea id="stopp-input" rows="3" placeholder="Jot a few words \u2014 or just answer in your head\u2026">' + esc(existing) + '</textarea>';
+    }
+    const credit = this.stoppStep === 0
+      ? '<p class="credit">STOPP skill adapted from Carol Vivyan (getselfhelp.co.uk),<br>after Ciarrochi &amp; Bailey.</p>'
+      : "";
+    return '<div class="fadein center">' +
+      '<div class="stopp-dots">' + dots + '</div>' +
+      '<div class="stopp-letter">' + step.letter + '</div>' +
+      '<h2 class="tool-title" style="margin-top:0">' + step.title + '</h2>' +
+      '<p class="tool-body">' + step.body + '</p>' +
+      middle +
+      '<button class="big-btn" style="background:var(--accent)" onclick="app.stoppNext()">' + step.cta + '</button>' +
+      '<button class="ghost-btn" onclick="app.stoppSkip()">Skip \u2014 I\u2019m good</button>' +
+      credit +
+    '</div>';
+  },
+
+  bootStopp() {
+    if (STOPP_STEPS[this.stoppStep] && STOPP_STEPS[this.stoppStep].breathe) {
+      this.breathCycle("in");
+    }
   },
 
   viewTool() {
@@ -769,6 +1020,57 @@ const app = {
     tick();
   },
 
+  /* ---------- practice view ---------- */
+  practiceEntryFor(dstr, slot) {
+    return this.entries.find(e => e.practice === slot && dateStr(new Date(e.timestamp)) === dstr);
+  },
+
+  viewPractice() {
+    const today = todayStr();
+    const slots = [
+      { id: "am", label: "Morning check-in", emoji: "\u2600\uFE0F" },
+      { id: "pm", label: "Evening check-in", emoji: "\u{1F319}" },
+    ];
+    const cards = slots.map(s => {
+      const done = this.practiceEntryFor(today, s.id);
+      if (done) {
+        const em = emotionById(done.emotion);
+        return '<div class="slot-card done">' +
+          '<span class="emoji">' + s.emoji + '</span>' +
+          '<span><span class="t">' + s.label + ' \u2713</span><br>' +
+          '<span class="s">Logged ' + em.label + ' \u00B7 ' + done.intensity + '/5 \u00B7 ' + timeAgo(done.timestamp) + '</span></span>' +
+        '</div>';
+      }
+      return '<button class="slot-card" onclick="app.pickPractice(\'' + s.id + '\')">' +
+        '<span class="emoji">' + s.emoji + '</span>' +
+        '<span><span class="t">' + s.label + '</span><br>' +
+        '<span class="s">Not yet \u2014 tap to log how you feel</span></span>' +
+      '</button>';
+    }).join("");
+
+    // 7-day dot strip (today rightmost)
+    let strip = "";
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 86400000);
+      const ds = dateStr(d);
+      const am = this.practiceEntryFor(ds, "am") ? " on" : "";
+      const pm = this.practiceEntryFor(ds, "pm") ? " on" : "";
+      strip += '<div class="week-day">' +
+        '<span class="pdot' + am + '"></span>' +
+        '<span class="pdot' + pm + '"></span>' +
+        '<span class="lbl">' + (i === 0 ? "Today" : DAY_NAMES[d.getDay()]) + '</span>' +
+      '</div>';
+    }
+
+    return '<div class="fadein">' +
+      '<p class="prompt">Daily practice</p>' +
+      '<p class="hint" style="text-align:left;margin:0 0 14px">Twice a day, spike or not. Calm days are your baseline \u2014 they matter as much as spike days.</p>' +
+      cards +
+      '<div class="week-strip">' + strip + '</div>' +
+      '<p class="hint">Top dot = morning, bottom = evening. Missed dots are expected, not failures.</p>' +
+    '</div>';
+  },
+
   viewPatterns() {
     if (this.entries.length === 0) {
       return '<div class="fadein empty-state">' +
@@ -821,8 +1123,10 @@ const app = {
       const dots = "\u25CF".repeat(e.intensity) + "\u25CB".repeat(5 - e.intensity);
       const sub = [
         timeAgo(e.timestamp),
+        e.practice ? (e.practice === "am" ? "AM practice" : "PM practice") : null,
         e.trigger_tag || null,
         e.coping_tool_used ? "used a reset" : null,
+        e.stopp ? "STOPP \u2713" : null,
         e.note || null,
       ].filter(Boolean).join(" \u00B7 ");
       return '<div class="entry">' +
@@ -862,12 +1166,12 @@ const app = {
           '<input type="time" id="nudge-time" value="' + esc(s.nudgeTime) + '" onchange="app.setNudgeTime(this.value)">' +
         '</div>' +
         this.nudgeStatusLine() +
-        '<p class="status-line" style="margin-top:8px">Honest limit: a web app can\u2019t wake your phone on its own. This fires when the app is open (or installed and recently used). For a guaranteed nudge, set a matching daily alarm named \u201CRegulate\u201D \u2014 the two together work.</p>' +
+        '<p class="status-line" style="margin-top:8px">Honest limit: a web app can\u2019t wake your phone on its own. This fires when the app is open (or installed and recently used). For a guaranteed nudge, set matching daily alarms for your AM and PM practice \u2014 the alarms guarantee it, the app rewards it.</p>' +
       '</div>' +
 
       '<div class="settings-section">' +
         '<h3>Your data</h3>' +
-        '<p class="desc">' + this.entries.length + ' entries, stored only on this device. Export a backup any time \u2014 JSON restores into the app, CSV opens in Excel.</p>' +
+        '<p class="desc">' + this.entries.length + ' entries, stored only on this device. Export a backup any time \u2014 JSON restores into the app, CSV opens in Excel (now includes practice + STOPP columns).</p>' +
         '<button class="row-btn" onclick="app.exportJSON()">Export backup (JSON)</button>' +
         '<button class="row-btn" onclick="app.exportCSV()">Export for spreadsheets (CSV)</button>' +
         '<button class="row-btn" onclick="document.getElementById(\'import-file\').click()">Import a JSON backup</button>' +
@@ -875,7 +1179,7 @@ const app = {
         (this.importStatus ? '<p class="status-line ok">' + esc(this.importStatus) + '</p>' : '') +
       '</div>' +
 
-      '<p class="fineprint">Regulate v' + APP_VERSION + ' \u00B7 offline-first \u00B7 no accounts, no cloud, no tracking.<br>Data lives in this browser \u2014 clearing site data erases it, so export backups.</p>' +
+      '<p class="fineprint">Regulate v' + APP_VERSION + ' \u00B7 offline-first \u00B7 no accounts, no cloud, no tracking.<br>Data lives in this browser \u2014 clearing site data erases it, so export backups.<br>STOPP skill adapted from Carol Vivyan (getselfhelp.co.uk), after Ciarrochi &amp; Bailey.</p>' +
     '</div>';
   },
 };
